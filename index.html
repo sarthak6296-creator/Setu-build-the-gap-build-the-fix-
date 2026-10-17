@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OpportunityKit – Check if you qualify</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F1F5F9;--card:#FFFFFF;--text:#14213D;--muted:#5B6678;--line:#D5DDE6;--ok:#0B7A5A;--okbg:#DDF3EA;--bad:#C8283B;--badbg:#FBE3E6;--wait:#9A5B00;--waitbg:#FFEBC8;--ink:#14213D;--onink:#FFFFFF;--field:#F8FAFC;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1621;--card:#17212E;--text:#E7EDF4;--muted:#9AA8B8;--line:#2B394A;--ok:#4FD1A1;--okbg:#12362B;--bad:#FF7A8A;--badbg:#3F1B22;--wait:#FFC266;--waitbg:#3B2C0E;--ink:#0A111A;--field:#101A26}}
+:root[data-theme="dark"]{--bg:#0E1621;--card:#17212E;--text:#E7EDF4;--muted:#9AA8B8;--line:#2B394A;--ok:#4FD1A1;--okbg:#12362B;--bad:#FF7A8A;--badbg:#3F1B22;--wait:#FFC266;--waitbg:#3B2C0E;--ink:#0A111A;--field:#101A26}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 "Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3{font-family:"Space Grotesk",system-ui,sans-serif;margin:0}
+header{background:var(--ink);color:var(--onink);padding:28px 16px 24px}
+.wrap{max-width:1040px;margin:0 auto}
+header h1{font-size:clamp(28px,5vw,42px);line-height:1.1}header p{margin:8px 0 16px;color:#B9C6D6;max-width:60ch}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 14px;min-height:42px}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #3B82F6;outline-offset:2px}
+.pri{background:var(--ok);border-color:var(--ok);color:#fff;font-weight:600}.hd{background:#fff;color:#14213D;border-color:#fff;font-weight:600}
+main{padding:20px 16px 48px}.grid{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.card h2{font-size:21px;margin-bottom:4px}.sub{color:var(--muted);margin:0 0 12px;font-size:15px}
+label{display:block;font-size:14px;font-weight:600;margin:10px 0 4px}label small{font-weight:400;color:var(--muted)}
+input,select,textarea{width:100%;font:inherit;color:var(--text);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-height:42px}
+textarea{min-height:110px;resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}.tabs button[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.msg{margin-top:10px;font-size:14px;color:var(--bad);min-height:20px}.msg.info{color:var(--muted)}
+details{margin-top:12px;border-top:1px solid var(--line);padding-top:8px}summary{cursor:pointer;font-weight:600;min-height:32px}
+#res{margin-top:16px}.verdict{border-radius:12px;padding:16px 18px;border:2px solid var(--line)}
+.verdict h2{font-size:24px}.verdict.v-ok{border-color:var(--ok);background:var(--okbg)}.verdict.v-bad{border-color:var(--bad);background:var(--badbg)}.verdict.v-wait{border-color:var(--wait);background:var(--waitbg)}
+.bar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:12px 0 6px;background:var(--line)}.bar i{display:block}
+.counts{display:flex;gap:16px;flex-wrap:wrap;font-weight:600;font-size:15px}
+.item{display:grid;grid-template-columns:1fr auto;gap:4px 12px;border:1px solid var(--line);border-left-width:6px;border-radius:10px;padding:12px 14px;margin-top:10px;background:var(--card)}
+.item.m{border-left-color:var(--ok)}.item.x{border-left-color:var(--bad)}.item.q{border-left-color:var(--wait)}
+.item h3{font-size:17px}.kv{color:var(--muted);font-size:14px;grid-column:1/-1}.kv b{color:var(--text)}.why{grid-column:1/-1}
+.badge{font:700 12px "Space Grotesk",sans-serif;padding:5px 10px;border-radius:999px;align-self:start;white-space:nowrap}
+.m .badge{background:var(--okbg);color:var(--ok)}.x .badge{background:var(--badbg);color:var(--bad)}.q .badge{background:var(--waitbg);color:var(--wait)}
+ol.steps{padding-left:20px;margin:8px 0 0}ol.steps li{margin:6px 0}
+.hint{font-size:13px;color:var(--muted)}
+.hl{background:var(--waitbg);color:var(--text);border-radius:3px;padding:0 2px}#pv{margin-top:10px;font-size:14px;line-height:1.7}
+.how,.plans{display:grid;gap:12px;grid-template-columns:repeat(3,1fr);margin-bottom:16px}@media(max-width:760px){.how,.plans{grid-template-columns:1fr}}
+.how h3,.plans h3{font-size:17px;margin-bottom:4px}.how p,.plans p,.plans li{margin:0;color:var(--muted);font-size:14.5px}.plans ul{margin:6px 0 0;padding-left:18px}.tag{display:inline-block;font:700 12px "Space Grotesk",sans-serif;background:var(--okbg);color:var(--ok);border-radius:999px;padding:3px 10px;margin-bottom:6px}
+.row input{flex:1 1 200px}.rm{min-height:36px;padding:5px 12px;font-size:14px}
+.ring{width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;flex:none}.ring span{width:62px;height:62px;border-radius:50%;background:var(--card);display:grid;place-items:center;font:700 18px "Space Grotesk",sans-serif;color:var(--text)}
+.vhead{display:flex;gap:16px;align-items:center}.vhead>div:last-child{flex:1}
+.cat{font:700 16px "Space Grotesk",sans-serif;margin:20px 0 0;display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding-bottom:4px}.cat span{font:600 13px "Source Sans 3",sans-serif;color:var(--muted)}
+.chip{display:inline-block;font:600 12px "Source Sans 3",sans-serif;border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:var(--muted);margin-left:6px;vertical-align:middle}
+.wi{display:flex;gap:8px;align-items:center;font-size:14px;margin:6px 0 0;font-weight:600;grid-column:1/-1}.wi input{width:auto;min-height:0}
+.item.a{border-left-style:dashed;border-left-color:var(--ok)}.item.a .badge{background:var(--okbg);color:var(--ok)}
+@media print{header,.stepper,[data-p="1"],[data-p="2"],#mini,#s3nav,.row button{display:none!important}}
+@property --p{syntax:"<number>";inherits:false;initial-value:0}
+[hidden]{display:none!important}
+:root{--edge:#14213D}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--edge:#5B7089}}:root[data-theme="dark"]{--edge:#5B7089}
+body{background-image:linear-gradient(rgba(120,140,170,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(120,140,170,.16) 1px,transparent 1px);background-size:28px 28px;padding-bottom:84px}
+.card,.item,.verdict{border:2px solid var(--edge);box-shadow:4px 4px 0 var(--edge)}.item{border-left-width:8px}
+button{border:2px solid var(--edge);box-shadow:2px 2px 0 var(--edge);font-weight:600;transition:transform .08s,box-shadow .08s}button:active{transform:translate(2px,2px);box-shadow:none}
+.badge{border:2px solid currentColor;transform:rotate(-2deg)}
+input,select,textarea{border-width:2px}
+.stepper{display:flex;gap:8px;margin:0 0 18px}.stepper button{flex:1;display:flex;gap:8px;align-items:center;justify-content:center;padding:8px;background:var(--card)}
+.stepper button[aria-current=step]{background:var(--ink);color:#fff}.stepper .done{background:var(--okbg);color:var(--ok)}
+.stepper i{font:700 14px "Space Grotesk",sans-serif;font-style:normal;border:2px solid currentColor;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;flex:none}
+.seg{display:flex;flex-wrap:wrap;gap:6px}.seg button{padding:6px 12px;min-height:38px;box-shadow:none}.seg button[aria-pressed=true]{background:var(--ok);border-color:var(--ok);color:#fff}.seg .hint{align-self:center}
+.tags{display:flex;flex-wrap:wrap;gap:6px}.tg{padding:4px 10px;min-height:32px;background:var(--okbg);color:var(--ok);border-color:var(--ok);box-shadow:none;border-radius:999px;font-size:14px}
+input[type=range]{padding:0;min-height:30px;accent-color:var(--ok);border:0;background:transparent}
+.docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}.dc{display:flex;justify-content:space-between;gap:8px;text-align:left;padding:10px;box-shadow:none;border-style:dashed}.dc b{font-size:12px}
+.dc.y{background:var(--okbg);border:2px solid var(--ok);color:var(--ok)}.dc.n{background:var(--badbg);border:2px solid var(--bad);color:var(--bad)}
+.ring{transition:--p .7s ease}
+#mini{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--ink);color:#fff;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:center;justify-content:center}
+#mini .ring{width:48px;height:48px}#mini .ring span{width:36px;height:36px;font-size:12px;background:var(--ink);color:#fff}#mtx{flex:1;max-width:520px;font-size:14px}#mini button{box-shadow:none;border-color:#fff}
+</style></head><body>
+<header><div class="wrap"><h1>OpportunityKit</h1>
+<p>Paste what an internship, scholarship or competition asks for. Add your profile. See what matches, what doesn’t and what is still unknown.</p>
+<button class="hd" id="ex">Try the example</button></div></header>
+<main><div class="wrap">
+<div class="how" aria-label="How it works"><div class="card"><h3>1. Organize</h3><p>Paste any internship, scholarship or competition text. Visible rules find year, CGPA, skills, documents, links, dates and more, and highlight them in your text.</p></div><div class="card"><h3>2. Compare</h3><p>Each requirement is checked against your profile with a plain rule, such as CGPA at or above the cut-off. A blank answer is Missing info, never a fail.</p></div><div class="card"><h3>3. Explain</h3><p>Every item gets a badge, a reason and a fix. You see a readiness bar and ordered next steps, not just yes or no.</p></div></div>
+<nav class="stepper" aria-label="Steps"><button data-s="1" aria-current="step"><i>1</i>Opportunity</button><button data-s="2"><i>2</i>Profile</button><button data-s="3"><i>3</i>Result</button></nav>
+<div id="panels"><div data-p="1">
+<section class="card"><h2>1. Opportunity requirements</h2><p class="sub">Paste the text, then press Build checklist. Fix any field the tool got wrong.</p>
+<div class="tabs" role="group" aria-label="Sample type"><button data-t="intern" aria-pressed="true">Internship</button><button data-t="schol" aria-pressed="false">Scholarship</button><button data-t="comp" aria-pressed="false">Competition</button></div>
+<label for="txt">Requirements text</label><textarea id="txt" placeholder="Example: 2nd or 3rd-year B.Tech student. CGPA 7.5 or above. Skills: HTML, CSS, JavaScript. Resume required."></textarea>
+<div class="row"><button class="pri" id="build">Build checklist</button><button id="clr1">Clear</button></div><div class="msg info" id="m1"></div><div id="pv"></div>
+<details open><summary>Checklist (editable, leave blank if not required)</summary>
+<div class="two"><div><label for="r_ymin">Year from</label><select id="r_ymin"></select></div><div><label for="r_ymax">Year to</label><select id="r_ymax"></select></div></div>
+<label for="r_branch">Branches <small>comma separated</small></label><input id="r_branch">
+<div class="two"><div><label for="r_cgpa">Min CGPA</label><input id="r_cgpa" type="number" step="0.1" min="0" max="10"></div><div><label for="r_pct">Min marks %</label><input id="r_pct" type="number" min="0" max="100"></div></div>
+<label for="r_skills">Skills <small>comma separated</small></label><input id="r_skills">
+<label for="r_docs">Documents <small>comma separated, e.g. resume, marksheet</small></label><input id="r_docs">
+<label><input type="checkbox" id="r_link" style="width:auto;min-height:0"> Portfolio or GitHub link required</label>
+<div class="two"><div><label for="r_weeks">Weeks needed</label><input id="r_weeks" type="number" min="0"></div><div><label for="r_inc">Max family income <small>lakh/yr</small></label><input id="r_inc" type="number" step="0.1" min="0"></div></div>
+<div class="two"><div><label for="r_tmin">Team size min</label><input id="r_tmin" type="number" min="1"></div><div><label for="r_tmax">Team size max</label><input id="r_tmax" type="number" min="1"></div></div>
+<label for="r_dl">Deadline</label><input id="r_dl" type="date"></details></section>
+<div class="row"><button class="pri" id="n2">Next: your profile</button></div></div><div data-p="2" hidden>
+<section class="card"><h2>2. Your profile</h2><p class="sub">Tap and slide. The result updates live. Leave things unset if you don’t know yet: unset means “missing”, never “fail”.</p>
+<label>Year of study</label><div class="seg" id="yseg"></div><select id="p_year" hidden></select>
+<label for="p_branch">Branch</label><div class="seg" id="bseg"></div><input id="p_branch" placeholder="Type or tap a branch" style="margin-top:6px">
+<label for="cg">CGPA <output id="cgv" class="chip">not set</output></label><input type="range" id="cg" min="0" max="10" step="0.1" value="7" aria-label="CGPA slider">
+<div class="two"><div><label for="p_cgpa">CGPA exact</label><input id="p_cgpa" type="number" step="0.01" min="0" max="10"></div><div><label for="p_pct">Marks %</label><input id="p_pct" type="number" min="0" max="100"></div></div>
+<label for="skin">Skills</label><div class="tags" id="skt"></div><input id="skin" placeholder="Type a skill, press Enter" style="margin-top:6px"><input type="hidden" id="p_skills"><div class="seg" id="sksug" style="margin-top:6px"></div>
+<label for="p_link">Portfolio / GitHub link</label><input id="p_link" placeholder="https://github.com/yourname">
+<label for="p_weeks">Weeks available</label><div class="seg" id="wseg"></div><input id="p_weeks" type="number" min="0" placeholder="or type the number of weeks" style="margin-top:6px">
+<div id="docs"></div>
+<details><summary>Only if the opportunity asks: income, team size</summary><div class="two"><div><label for="p_inc">Family income (lakh/yr)</label><input id="p_inc" type="number" step="0.1" min="0"></div><div><label for="p_team">Your team size</label><input id="p_team" type="number" min="1"></div></div></details>
+<div class="row"><button id="b1">Back</button><button class="pri" id="go">See my result</button><button id="clr2">Clear profile</button></div><div class="msg" id="m2" role="alert"></div></section>
+</div><div data-p="3" hidden><div class="row" id="s3nav" style="margin:0 0 12px"><button id="b3a">Edit profile</button><button id="b3b">Change opportunity</button></div>
+<div id="res" aria-live="polite"></div>
+<div id="cmp"></div></div></div>
+<h2 style="margin:32px 0 6px;font-size:24px">Who pays and why</h2><p class="sub">Free for students. Paid extras and college licenses keep it running.</p>
+<div class="plans"><div class="card"><span class="tag">Free plan</span><h3>Students</h3><p>Unlimited checks on internships, scholarships and competitions. No sign-up.</p></div><div class="card"><span class="tag">Paid extras</span><h3>Student Plus</h3><ul><li>Deadline reminders</li><li>Saved profiles and history</li><li>Curated opportunity lists</li></ul></div><div class="card"><span class="tag">College license</span><h3>Placement cells</h3><ul><li>Batch readiness dashboard</li><li>Common gaps, such as missing GitHub links</li><li>Custom checklists for campus drives</li></ul></div></div>
+<div class="card"><h3 style="font-size:17px">Value versus cost</h3><p class="sub" style="margin:4px 0 0">Students save hours of reading rules and avoid wrong or late applications. Colleges get better prepared applicants and higher placement readiness. Running cost is very low because the rules run in the browser and need no AI calls. Pilot idea: a small yearly fee per student for colleges (for example ₹99) and a small monthly fee for Student Plus (for example ₹49). These are assumptions to test with real users.</p></div></div></main>
+<div id="mini" hidden><div class="ring" id="mr" style="--p:0;--c:var(--ok)"><span id="mrt">0%</span></div><div id="mtx"></div><button id="mgo">View result</button></div>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var SAMPLES={intern:"2nd or 3rd-year B.Tech/B.E. student. CGPA 7.5 or above. Skills: HTML, CSS, JavaScript. Resume required. Portfolio or GitHub link. Available for 8 weeks.",
+schol:"Open to 1st to 4th year students. Minimum 75% marks. Family income below 4 lakh per year. Documents: marksheet, income certificate, bonafide certificate. Last date: 30 Nov 2026.",
+comp:"Open to 2nd to 4th year engineering students. Branch: CSE, IT. Team of 2 to 4 members. Skills: Python. Resume required. Deadline: 5 Dec 2026."};
+var DOCS=[["resume",/resume|\bcv\b/i],["marksheet",/mark ?sheet|transcript/i],["income certificate",/income certificate/i],["bonafide certificate",/bonafide/i],["id proof",/aadhaar|id proof|identity/i],["recommendation letter",/recommendation/i],["cover letter",/cover letter/i]];
+var MON={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+var ALIAS={js:"javascript",ts:"typescript",cpp:"c++",py:"python","node":"nodejs","node.js":"nodejs","reactjs":"react","react.js":"react"};
+var BR={cse:"computer",cs:"computer",it:"information",ece:"electronics",entc:"electronics",mech:"mechanical",aiml:"artificial",ai:"artificial",eee:"electrical"};
+var lastRows=[],saved=[],docState={},esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+function num(id){var v=$(id).value.trim();if(v==="")return null;var n=parseFloat(v);return isNaN(n)?null:n}
+function list(id){return $(id).value.split(/,|;|\band\b|\//i).map(function(x){return x.trim()}).filter(Boolean)}
+function sk(x){x=x.toLowerCase().trim();return ALIAS[x]||x}
+function bk(x){x=x.toLowerCase().trim();return BR[x]||x.split(/\s+/)[0]}
+["r_ymin","r_ymax","p_year"].forEach(function(id){var s=$(id),o='<option value="">'+(id==="p_year"?"Not answered":"Any")+'</option>';for(var i=1;i<=4;i++)o+='<option value="'+i+'">'+i+(i==1?"st":i==2?"nd":i==3?"rd":"th")+' year</option>';s.innerHTML=o});
+function parse(t){fixed={};
+ var m,f=function(id,v){$(id).value=v==null?"":v};
+ ["r_ymin","r_ymax","r_branch","r_cgpa","r_pct","r_skills","r_docs","r_weeks","r_inc","r_tmin","r_tmax","r_dl"].forEach(function(i){f(i,"")});$("r_link").checked=false;
+ m=t.match(/(\d)(?:st|nd|rd|th)?\s*(?:(?:or|to|-|–|and)\s*(\d)(?:st|nd|rd|th)?\s*)?-?\s*year/i);if(m){f("r_ymin",m[1]);f("r_ymax",m[2]||m[1]);if(!m[2]&&/(above|onwards|and above)/i.test(t.slice(m.index,m.index+40)))f("r_ymax","4")}
+ m=t.match(/branch(?:es)?\s*[:\-]\s*([^.\n]+)/i);if(m)f("r_branch",m[1].trim());
+ m=t.match(/cgpa[^0-9]{0,25}(\d+(?:\.\d+)?)/i);if(m)f("r_cgpa",m[1]);
+ m=t.match(/(\d{2,3}(?:\.\d+)?)\s*%/);if(m)f("r_pct",m[1]);
+ m=t.match(/skills?(?:\s+required)?\s*[:\-]\s*([^.\n]+)/i);if(m)f("r_skills",m[1].trim());
+ var d=[];DOCS.forEach(function(x){if(x[1].test(t))d.push(x[0])});f("r_docs",d.join(", "));
+ $("r_link").checked=/portfolio|github|linkedin/i.test(t);
+ m=t.match(/(\d+)\s*weeks?/i);if(m)f("r_weeks",m[1]);else{m=t.match(/(\d+)\s*months?/i);if(m)f("r_weeks",+m[1]*4)}
+ if(!$("r_ymin").value&&/final[- ]year/i.test(t)){f("r_ymin","4");f("r_ymax","4")}
+ m=t.match(/income[^0-9]{0,40}?(\d+(?:\.\d+)?)\s*(lakh|lakhs|lpa)?/i);if(m){var v=parseFloat(m[1]);if(!m[2]&&v>=1000)v=v/100000;f("r_inc",v)}
+ m=t.match(/team[^.\n]{0,20}?(\d+)(?:\s*(?:to|-|–)\s*(\d+))?/i);if(m){f("r_tmin",m[1]);f("r_tmax",m[2]||m[1])}
+ var dl=t.match(/(?:deadline|last date|apply by|due|before)[^.\n]{0,25}/i);
+ if(dl){var s=dl[0],y=new Date().getFullYear(),a=s.match(/(\d{1,2})\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s*(\d{4})?/i),b=s.match(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/),D,M,Y;
+  if(a){D=+a[1];M=MON[a[2].toLowerCase()];Y=+(a[3]||y)}else if(b){D=+b[1];M=+b[2];Y=+b[3]}
+  if(D&&M&&Y)f("r_dl",Y+"-"+("0"+M).slice(-2)+"-"+("0"+D).slice(-2))}
+ renderDocs()}
+function renderDocs(){var d=list("r_docs"),h="";
+ if(d.length){h='<label>Documents <small>tap to cycle: unknown, ready, not ready</small></label><div class="docs">';d.forEach(function(x){var v=docState[x]||"";h+='<button type="button" class="dc '+(v||"u")+'" data-doc="'+esc(x)+'"><span>'+esc(x)+'</span><b>'+(v==="y"?"Ready":v==="n"?"Not ready":"Unknown")+'</b></button>'});h+="</div>"}
+ $("docs").innerHTML=h;Array.prototype.forEach.call($("docs").querySelectorAll("button"),function(b){b.onclick=function(){var k=b.getAttribute("data-doc"),v=docState[k]||"";docState[k]=v===""?"y":v==="y"?"n":"";renderDocs();live()}});sync()}
+function sync(){var P=function(id,attr,val){Array.prototype.forEach.call($(id).querySelectorAll("button[data-"+attr+"]"),function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-"+attr)===val))})};
+ P("yseg","y",$("p_year").value);P("bseg","b",$("p_branch").value.trim());P("wseg","w",$("p_weeks").value);
+ var c=$("p_cgpa").value;$("cg").value=c||7;$("cgv").textContent=c||"not set";
+ var arr=$("p_skills").value.split(",").map(function(x){return x.trim()}).filter(Boolean);
+ $("skt").innerHTML=arr.map(function(x,i){return '<button type="button" class="tg" data-i="'+i+'" aria-label="Remove '+esc(x)+'">'+esc(x)+' ×</button>'}).join("");
+ var have=arr.map(sk),req=list("r_skills").filter(function(x){return have.indexOf(sk(x))<0});
+ $("sksug").innerHTML=req.length?'<span class="hint">Required, tap to add:</span>'+req.map(function(x){return '<button type="button" data-add="'+esc(x)+'">+ '+esc(x)+'</button>'}).join(""):""}
+var S=1,lt;
+function addSk(v){v=v.trim();if(!v)return;var arr=$("p_skills").value.split(",").map(function(x){return x.trim()}).filter(Boolean);if(arr.map(sk).indexOf(sk(v))<0)arr.push(v);$("p_skills").value=arr.join(", ");sync();live()}
+function live(){clearTimeout(lt);lt=setTimeout(function(){var rows=check();if(!rows.length){$("mini").hidden=true;return}render(rows,true)},120)}
+function mini(pct,col,n){var m=$("mini");m.hidden=(S===3);$("mr").style.setProperty("--p",pct);$("mr").style.setProperty("--c",col);$("mrt").textContent=pct+"%";$("mtx").innerHTML="<b>"+n.m+"</b> match, <b>"+n.x+"</b> mismatch, <b>"+n.q+"</b> missing info"}
+function anim(keep){var rg=$("res").querySelector(".ring");if(rg&&!keep){var pp=rg.style.getPropertyValue("--p");rg.style.setProperty("--p",0);requestAnimationFrame(function(){requestAnimationFrame(function(){rg.style.setProperty("--p",pp)})})}}
+function step(n){S=n;Array.prototype.forEach.call(document.querySelectorAll("[data-p]"),function(p){p.hidden=p.getAttribute("data-p")!==String(n)});
+ Array.prototype.forEach.call(document.querySelectorAll(".stepper button"),function(b){var k=+b.getAttribute("data-s");b.setAttribute("aria-current",k===n?"step":"false");b.classList.toggle("done",k<n)});
+ if(lastRows.length)$("mini").hidden=(n===3);try{window.scrollTo({top:0,behavior:"smooth"})}catch(e){}}
+function check(){var rows=[],p={year:num("p_year"),br:$("p_branch").value.trim(),cgpa:num("p_cgpa"),pct:num("p_pct"),sk:list("p_skills"),link:$("p_link").value.trim(),weeks:num("p_weeks"),inc:num("p_inc"),team:num("p_team")};
+ function add(k,ask,have,st,why,fix){rows.push({k:k,ask:ask,have:have,st:st,why:why,fix:fix})}
+ var ymin=num("r_ymin"),ymax=num("r_ymax");
+ if(ymin||ymax){var lo=ymin||1,hi=ymax||4,ask=lo===hi?lo+" year only":lo+" to "+hi+" year";
+  if(p.year==null)add("Year of study",ask,"Not provided","q","Cannot be checked yet.","Select your year of study.");
+  else if(p.year>=lo&&p.year<=hi)add("Year of study",ask,p.year+" year","m","Within the required years.");
+  else add("Year of study",ask,p.year+" year","x","Your year is outside the allowed range.","Look for an opportunity open to year "+p.year+", or check if exceptions apply.")}
+ var rb=list("r_branch");
+ if(rb.length){var h=rb.join(", ");if(!p.br)add("Branch",h,"Not provided","q","Cannot be checked yet.","Enter your branch.");
+  else if(rb.some(function(b){return bk(b)===bk(p.br)}))add("Branch",h,p.br,"m","Your branch is accepted.");
+  else add("Branch",h,p.br,"x","Your branch is not in the accepted list.","Confirm with the organizer if your branch is eligible.")}
+ var c=num("r_cgpa");if(c!=null){if(p.cgpa==null)add("CGPA","≥ "+c,"Not provided","q","Cannot be checked yet.","Enter your CGPA.");
+  else if(p.cgpa>=c)add("CGPA","≥ "+c,p.cgpa,"m","Above the minimum.");else add("CGPA","≥ "+c,p.cgpa,"x","Below the minimum by "+(c-p.cgpa).toFixed(2)+".","Improve your CGPA or pick an opportunity with a lower cut-off.")}
+ var pc=num("r_pct");if(pc!=null){if(p.pct==null)add("Marks","≥ "+pc+"%","Not provided","q","Cannot be checked yet.","Enter your marks percentage.");
+  else if(p.pct>=pc)add("Marks","≥ "+pc+"%",p.pct+"%","m","Above the cut-off.");else add("Marks","≥ "+pc+"%",p.pct+"%","x","Below the cut-off by "+(pc-p.pct).toFixed(1)+" points.","Check scholarships with a lower marks cut-off.")}
+ var rs=list("r_skills");if(rs.length){var have=p.sk.map(sk),miss=rs.filter(function(s){return have.indexOf(sk(s))<0});
+  if(!p.sk.length)add("Skills",rs.join(", "),"Not provided","q","Cannot be checked yet.","List the skills you know.");
+  else if(!miss.length)add("Skills",rs.join(", "),p.sk.join(", "),"m","You list every required skill.");
+  else add("Skills",rs.join(", "),p.sk.join(", "),"x",miss.join(", ")+(miss.length>1?" are":" is")+" not listed.","Add "+(miss.length>1?"them":"it")+" if you know "+(miss.length>1?"them":"it")+", or learn "+(miss.length>1?"them":"it")+" before applying.")}
+ list("r_docs").forEach(function(d){var v=docState[d]||"",nm=d.charAt(0).toUpperCase()+d.slice(1);
+  if(v==="y")add(nm,"Required","Ready","m",nm+" is available.");else if(v==="n")add(nm,"Required","Not ready","x",nm+" is required but not ready.","Prepare your "+d+" before applying.");
+  else add(nm,"Required","Not answered","q","Cannot be checked yet.","Tell us if your "+d+" is ready.")});
+ if($("r_link").checked){if(!p.link)add("Portfolio / GitHub","Link required","Not provided","q","Cannot be checked.","Add a link to continue.");
+  else if(/^(https?:\/\/)?[\w-]+(\.[\w-]+)+(\/\S*)?$/i.test(p.link))add("Portfolio / GitHub","Link required",p.link,"m","A link is provided.");
+  else add("Portfolio / GitHub","Link required",p.link,"x","This does not look like a valid link.","Enter a full link such as https://github.com/name.")}
+ var w=num("r_weeks");if(w!=null){if(p.weeks==null)add("Availability",w+" weeks","Not provided","q","Cannot be checked.","Confirm your available dates.");
+  else if(p.weeks>=w)add("Availability",w+" weeks",p.weeks+" weeks","m","You can commit enough time.");else add("Availability",w+" weeks",p.weeks+" weeks","x","You are "+(w-p.weeks)+" week(s) short.","Check if a shorter or part-time option exists.")}
+ var im=num("r_inc");if(im!=null){if(p.inc==null)add("Family income","≤ "+im+" lakh/yr","Not provided","q","Cannot be checked yet.","Enter your family income.");
+  else if(p.inc<=im)add("Family income","≤ "+im+" lakh/yr",p.inc+" lakh/yr","m","Within the income limit.");else add("Family income","≤ "+im+" lakh/yr",p.inc+" lakh/yr","x","Above the income limit.","Look for scholarships with a higher income limit.")}
+ var tn=num("r_tmin"),tx=num("r_tmax");if(tn!=null||tx!=null){var a=tn||1,b=tx||99,ts=a===b?a+" members":a+" to "+(tx||"any")+" members";
+  if(p.team==null)add("Team size",ts,"Not provided","q","Cannot be checked yet.","Enter your team size.");
+  else if(p.team>=a&&p.team<=b)add("Team size",ts,p.team,"m","Team size is allowed.");else add("Team size",ts,p.team,"x","Team size is outside the allowed range.",p.team<a?"Add "+(a-p.team)+" more member(s).":"Reduce the team to "+b+" members.")}
+ var dl=$("r_dl").value;if(dl){var t0=new Date();t0.setHours(0,0,0,0);var dd=Math.round((new Date(dl+"T00:00:00")-t0)/864e5),ds=new Date(dl+"T00:00:00").toDateString().slice(4);
+  if(dd<0)add("Deadline",ds,"Passed "+(-dd)+" day(s) ago","x","The deadline has passed.","Look for the next intake or similar opportunities.");
+  else add("Deadline",ds,dd+" day(s) left","m",dd<=7?"Deadline is close. Apply soon.":"You have time to prepare.")}
+ return rows}
+function catOf(k){return /^(Year|Branch|CGPA|Marks|Family income|Team size)/.test(k)?0:k==="Skills"?1:/^(Availability|Deadline)/.test(k)?3:2}
+function effort(r){var k=r.k;if(r.st==="q")return{t:"Quick: add your answer",w:0};if(k==="Skills")return{t:"Takes time: learn it",w:2};if(/^(CGPA|Marks)/.test(k))return{t:"Long term",w:3};if(/^(Year|Branch|Family income|Deadline)/.test(k))return{t:"Not in your control",w:4};if(/^Team size/.test(k))return{t:"Quick: adjust your team",w:0};if(k==="Portfolio / GitHub")return{t:"Quick: fix the link",w:0};if(k==="Availability")return{t:"Check your schedule",w:1};return{t:"Needs preparation",w:1}}
+var fixed={};
+function render(rows,keep){var cv=$("cname")?$("cname").value:"";lastRows=rows;if(!keep)fixed={};
+ var eff=rows.map(function(r,i){return fixed[i]&&r.st!=="m"?"m":r.st}),n={m:0,x:0,q:0};eff.forEach(function(x){n[x]++});var T=rows.length,pct=Math.round(n.m/T*100),cls,col,title,line;
+ if(n.x){cls="v-bad";col="var(--bad)";title="Not ready to apply yet";line="Fix "+n.x+" mismatch"+(n.x>1?"es":"")+(n.q?" and add "+n.q+" missing detail"+(n.q>1?"s":""):"")+"."}
+ else if(n.q){cls="v-wait";col="var(--wait)";title="Almost there: details missing";line="Nothing fails so far, but "+n.q+" item"+(n.q>1?"s":"")+" can’t be checked until you answer."}
+ else{cls="v-ok";col="var(--ok)";title="Ready to apply";line="You meet every requirement. Check the official page and apply."}
+ var af=Object.keys(fixed).length,h='<div class="verdict '+cls+'"><div class="vhead"><div class="ring" style="--p:'+pct+';--c:'+col+'" role="img" aria-label="Readiness '+pct+' percent"><span>'+pct+'%</span></div><div><h2>'+title+(af?'<span class="chip">what-if view</span>':"")+'</h2><p style="margin:4px 0 0">'+line+'</p></div></div>'+bar(n,T)+'<div class="counts"><span style="color:var(--ok)">'+n.m+' match</span><span style="color:var(--bad)">'+n.x+' mismatch</span><span style="color:var(--wait)">'+n.q+' missing info</span></div>';
+ var plan=[];rows.forEach(function(r,i){if(eff[i]!=="m")plan.push({r:r,e:effort(r)})});plan.sort(function(a,b){return a.e.w-b.e.w});
+ if(plan.length){h+='<h3 style="margin-top:14px;font-size:17px">Fix plan, quickest first</h3><ol class="steps">';plan.forEach(function(p){h+="<li><b>"+esc(p.r.k)+":</b> "+esc(p.r.fix)+'<span class="chip">'+p.e.t+"</span></li>"});h+="</ol>"}
+ else if(af)h+='<p style="margin:12px 0 0"><b>With these fixes you would be ready to apply.</b></p>';
+ h+='<p class="hint" style="margin:10px 0 0">Try the what-if boxes below: tick a gap you plan to fix and watch the result change.</p></div>';
+ var lab={m:"MATCH",x:"MISMATCH",q:"MISSING INFO",a:"ASSUMED FIXED"},names=["Eligibility","Skills","Documents and links","Timing and commitment"];
+ for(var c=0;c<4;c++){var idx=[];rows.forEach(function(r,i){if(catOf(r.k)===c)idx.push(i)});if(!idx.length)continue;
+  var cm=idx.filter(function(i){return eff[i]==="m"}).length;h+='<div class="cat">'+names[c]+'<span>'+cm+' of '+idx.length+' met</span></div>';
+  idx.forEach(function(i){var r=rows[i],isF=fixed[i]&&r.st!=="m",st=isF?"a":r.st,e=effort(r);
+   h+='<div class="item '+st+'"><h3>'+esc(r.k)+'</h3><span class="badge">'+lab[st]+'</span><div class="kv">Asks: <b>'+esc(r.ask)+'</b> &nbsp;|&nbsp; You: <b>'+esc(r.have)+'</b></div><div class="why">'+(isF?"Assumed fixed: "+esc(r.fix):esc(r.why)+(r.fix?" "+esc(r.fix):""))+"</div>";
+   if(r.st!=="m"&&e.w<4)h+='<label class="wi"><input type="checkbox" data-wi="'+i+'"'+(fixed[i]?" checked":"")+'> What if I fix this?</label>';h+="</div>"})}
+ h+='<div class="row"><input id="cname" placeholder="Name this opportunity (optional)" aria-label="Opportunity name"><button class="pri" id="add">Add to comparison</button><button id="cp">Copy summary</button><button onclick="window.print()">Print result</button><span id="cpm" class="hint" style="align-self:center" role="status"></span></div>';
+ $("res").innerHTML=h;mini(pct,col,n);anim(keep);$("cname").value=cv;$("add").onclick=addCmp;$("cp").onclick=copySummary;
+ Array.prototype.forEach.call($("res").querySelectorAll("[data-wi]"),function(b){b.onchange=function(){var i=+b.getAttribute("data-wi");if(b.checked)fixed[i]=1;else delete fixed[i];render(lastRows,true)}});
+ if(!keep)$("res").scrollIntoView({behavior:"smooth",block:"start"})}
+function preview(t){var P=[/(\d)(?:st|nd|rd|th)?\s*(?:(?:or|to|-|–|and)\s*(\d)(?:st|nd|rd|th)?\s*)?-?\s*year/i,/branch(?:es)?\s*[:\-]\s*[^.\n]+/i,/cgpa[^0-9]{0,25}\d+(?:\.\d+)?(?:\s*(?:or above|and above|\+))?/i,/\d{2,3}(?:\.\d+)?\s*%/,/skills?(?:\s+required)?\s*[:\-]\s*[^.\n]+/i,/portfolio[^.\n]*|github[^.\n]*/i,/\d+\s*(?:weeks?|months?)/i,/income[^.\n]*/i,/team[^.\n]{0,20}?\d+(?:\s*(?:to|-|–)\s*\d+)?[^.\n]*/i,/(?:deadline|last date|apply by|due|before)[^.\n]{0,25}/i];DOCS.forEach(function(x){P.push(new RegExp(x[1].source,"i"))});
+ var R=[];P.forEach(function(re){var m=t.match(re);if(m)R.push([m.index,m.index+m[0].length])});R.sort(function(a,b){return a[0]-b[0]});
+ var o="",i=0;R.forEach(function(r){if(r[0]<i)return;o+=esc(t.slice(i,r[0]))+'<mark class="hl">'+esc(t.slice(r[0],r[1]))+"</mark>";i=r[1]});o+=esc(t.slice(i));
+ $("pv").innerHTML=R.length?"<b>Detected in your text:</b><br>"+o:""}
+function summaryText(){var n={m:0,x:0,q:0},L={m:"MATCH",x:"MISMATCH",q:"MISSING INFO"};lastRows.forEach(function(x){n[x.st]++});var t="OpportunityKit result: "+n.m+" match, "+n.x+" mismatch, "+n.q+" missing info\n\n";lastRows.forEach(function(x){t+=L[x.st]+" | "+x.k+" | asks "+x.ask+" | you "+x.have+" | "+x.why+(x.fix?" "+x.fix:"")+"\n"});return t}
+function copySummary(){var t=summaryText(),m=$("cpm");function ok(){m.textContent="Summary copied."}function fb(){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){m.textContent="Could not copy. Select the text manually."}document.body.removeChild(a)}
+ try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}}
+function bar(n,T){return '<div class="bar"><i style="width:'+n.m/T*100+'%;background:var(--ok)"></i><i style="width:'+n.x/T*100+'%;background:var(--bad)"></i><i style="width:'+n.q/T*100+'%;background:var(--wait)"></i></div>'}
+function addCmp(){var m=$("cpm");if(!lastRows.length)return;if(saved.length>=3){m.textContent="You can compare up to 3. Remove one first.";return}
+ var n={m:0,x:0,q:0};lastRows.forEach(function(x){n[x.st]++});var fx=lastRows.filter(function(x){return x.st==="x"}).concat(lastRows.filter(function(x){return x.st==="q"})).slice(0,2).map(function(x){return x.k+": "+x.fix});
+ saved.push({name:$("cname").value.trim()||"Opportunity "+(saved.length+1),n:n,T:lastRows.length,fix:fx});$("cname").value="";m.textContent="Added to comparison.";cmpRender();$("cmp").scrollIntoView({behavior:"smooth",block:"nearest"})}
+function cmpRender(){var c=$("cmp");if(!saved.length){c.innerHTML="";return}
+ saved.forEach(function(o,i){o.i=i});var s=saved.slice().sort(function(a,b){return a.n.x-b.n.x||a.n.q-b.n.q||b.n.m-a.n.m});
+ var h='<h2 style="margin:32px 0 6px;font-size:24px">Compare opportunities</h2><p class="sub">Ranked by fewest mismatches first, then fewest missing details. Check each opportunity with the same profile and add it here (up to 3).</p>';
+ s.forEach(function(o,k){h+='<div class="item '+(o.n.x?"x":o.n.q?"q":"m")+'"><h3>#'+(k+1)+" "+esc(o.name)+'</h3><span class="badge">'+(k===0&&s.length>1?"BEST FIT":Math.round(o.n.m/o.T*100)+"% MET")+'</span><div class="kv"><b>'+o.n.m+"</b> match, <b>"+o.n.x+"</b> mismatch, <b>"+o.n.q+'</b> missing info</div><div style="grid-column:1/-1">'+bar(o.n,o.T)+"</div>"+(o.fix.length?'<div class="why"><b>Fix first:</b> '+o.fix.map(esc).join(" | ")+"</div>":'<div class="why">Meets every requirement.</div>')+'<div class="why"><button class="rm" data-rm="'+o.i+'">Remove</button></div></div>'});
+ c.innerHTML=h;Array.prototype.forEach.call(c.querySelectorAll("[data-rm]"),function(b){b.onclick=function(){saved.splice(+b.getAttribute("data-rm"),1);cmpRender()}})}
+function setType(t){Array.prototype.forEach.call(document.querySelectorAll(".tabs button"),function(b){b.setAttribute("aria-pressed",b.getAttribute("data-t")===t)});$("txt").value=SAMPLES[t];parse(SAMPLES[t]);preview(SAMPLES[t]);live();$("m1").className="msg info";$("m1").textContent="Sample loaded and checklist built. Edit it or paste your own text."}
+Array.prototype.forEach.call(document.querySelectorAll(".tabs button"),function(b){b.onclick=function(){setType(b.getAttribute("data-t"))}});
+$("build").onclick=function(){var t=$("txt").value.trim();if(!t){$("m1").className="msg";$("m1").textContent="Paste the requirements text first, or pick a sample above.";return}
+ parse(t);preview(t);live();var any=list("r_skills").length||list("r_docs").length||num("r_ymin")||num("r_cgpa")||num("r_pct")||num("r_weeks")||num("r_inc")||num("r_tmin")||$("r_link").checked||$("r_dl").value||list("r_branch").length;
+ $("m1").className=any?"msg info":"msg";$("m1").textContent=any?"Checklist built. Review the fields below and fix anything wrong.":"No requirements found in this text. Fill the checklist fields manually."};
+$("r_docs").oninput=renderDocs;
+$("clr1").onclick=function(){$("txt").value="";parse("");$("pv").innerHTML="";live();$("m1").textContent=""};
+$("clr2").onclick=function(){["p_year","p_branch","p_cgpa","p_pct","p_skills","p_link","p_weeks","p_inc","p_team"].forEach(function(i){$(i).value=""});docState={};renderDocs();live();$("m2").textContent="";try{localStorage.removeItem("ok_profile")}catch(e){}};
+$("go").onclick=function(){var m=$("m2");m.textContent="";
+ var cg=num("p_cgpa"),pc=num("p_pct");if(cg!=null&&(cg<0||cg>10)){m.textContent="CGPA must be between 0 and 10.";return}if(pc!=null&&(pc<0||pc>100)){m.textContent="Marks must be between 0 and 100.";return}
+ var rows=check();if(!rows.length){m.textContent="Add at least one requirement first: paste text and press Build checklist, or try a sample.";return}
+ render(rows);step(3);try{var o={};["p_year","p_branch","p_cgpa","p_pct","p_skills","p_link","p_weeks","p_inc","p_team"].forEach(function(i){o[i]=$(i).value});o.docs=docState;localStorage.setItem("ok_profile",JSON.stringify(o))}catch(e){}};
+$("ex").onclick=function(){setType("intern");$("p_year").value="2";$("p_branch").value="CSE";$("p_cgpa").value="8.2";$("p_pct").value="";$("p_skills").value="HTML, CSS, Python";$("p_link").value="";$("p_weeks").value="";$("p_inc").value="";$("p_team").value="";docState={resume:"y"};renderDocs();$("go").click()};
+(function(){var Y=$("yseg"),B=$("bseg"),W=$("wseg");
+ Y.innerHTML=[1,2,3,4].map(function(i){return '<button type="button" data-y="'+i+'">'+i+(i==1?"st":i==2?"nd":i==3?"rd":"th")+' year</button>'}).join("");
+ B.innerHTML=["CSE","IT","ECE","Mechanical","Civil"].map(function(b){return '<button type="button" data-b="'+b+'">'+b+'</button>'}).join("");
+ W.innerHTML=[4,6,8,12].map(function(w){return '<button type="button" data-w="'+w+'">'+w+' weeks</button>'}).join("");
+ function tog(box,attr,id){box.onclick=function(e){var b=e.target.closest("button");if(!b)return;var v=b.getAttribute("data-"+attr);$(id).value=($(id).value.trim()===v)?"":v;sync();live()}}
+ tog(Y,"y","p_year");tog(B,"b","p_branch");tog(W,"w","p_weeks");
+ $("cg").oninput=function(){$("p_cgpa").value=this.value;sync();live()};
+ $("skt").onclick=function(e){var b=e.target.closest("button");if(!b)return;var arr=$("p_skills").value.split(",").map(function(x){return x.trim()}).filter(Boolean);arr.splice(+b.getAttribute("data-i"),1);$("p_skills").value=arr.join(", ");sync();live()};
+ $("sksug").onclick=function(e){var b=e.target.closest("button");if(b)addSk(b.getAttribute("data-add"))};
+ $("skin").onkeydown=function(e){if(e.key==="Enter"||e.key===","){e.preventDefault();addSk(this.value);this.value=""}};
+ $("skin").onblur=function(){if(this.value.trim()){addSk(this.value);this.value=""}};
+ document.addEventListener("input",function(e){if(e.target.id==="skin"||!e.target.closest||!e.target.closest("#panels"))return;if(e.target.id==="txt")return;sync();live()});
+ document.addEventListener("change",function(e){if(e.target.closest&&e.target.closest("#panels")&&e.target.id!=="txt"){sync();live()}});
+ $("n2").onclick=function(){if(!check().length){$("m1").className="msg";$("m1").textContent="Build a checklist first: paste text and press Build checklist, or pick a sample.";return}step(2)};
+ $("b1").onclick=function(){step(1)};$("b3a").onclick=function(){step(2)};$("b3b").onclick=function(){step(1)};$("mgo").onclick=function(){step(3)};
+ Array.prototype.forEach.call(document.querySelectorAll(".stepper button"),function(b){b.onclick=function(){var k=b.getAttribute("data-s");if(k==="1")step(1);else if(k==="2")$("n2").click();else $("go").click()}});
+})();
+try{var s=JSON.parse(localStorage.getItem("ok_profile")||"null");if(s){["p_year","p_branch","p_cgpa","p_pct","p_skills","p_link","p_weeks","p_inc","p_team"].forEach(function(i){if(s[i]!=null)$(i).value=s[i]});docState=s.docs||{}}}catch(e){}
+renderDocs();
+window.__ok={parse:parse,check:check};
+})();
+</script></body></html>
